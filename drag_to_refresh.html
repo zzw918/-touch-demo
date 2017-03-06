@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>下拉刷新</title>
+    <meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0">
+    <style>
+        *{
+            margin:0;
+            padding: 0;
+            font-size:15px;
+        }
+        .header{
+            height: 50px;
+            line-height: 50px;
+            text-align: center;
+            background-color: blue;
+            color:white;
+            font-size: 23px;
+        }
+        .drag_to_refresh{
+            align-items: center;
+            padding-left: 155px;
+            background-color: #bbb;
+            color:yellow;
+            display: none;
+        }
+        .refresh{
+            height: 50px;
+            line-height: 50px;
+            text-align: center;
+            background-color: #bbb;
+            color: green;
+            display: none;
+        }
+        .drag{
+            text-align: center;
+            background-color: lightgray;
+            position: relative;
+            padding:20px;
+            text-indent: 1em;
+            line-height: 30px;
+            font-size:18px;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="header">政务云</div>
+    <div class="drag_to_refresh"></div>
+    <div class="refresh">刷新中...</div>
+    <div class="drag">电子政务云（E-government cloud）属于政府云，结合了云计算技术的特点，对政府管理和服务职能进行精简、优化、整合，并通过信息化手段在政务上实现各种业务流程办理和职能服务，为政府各级部门提供可靠的基础IT服务平台。</div>
+<script>
+window.onload = function () {
+    var initX;
+    var drag_content = document.querySelector(".drag");
+    var drag_to_refresh = document.querySelector(".drag_to_refresh");
+    var refresh = document.querySelector(".refresh");
+
+    drag_content.addEventListener("touchmove",drag);
+    drag_content.addEventListener("touchstart",dragStart);
+    drag_content.addEventListener("touchend",dragEnd);
+
+    function dragStart(e){
+        initY = e.touches[0].pageY;
+        console.log(initX);
+    }
+
+    function drag (e){
+        drag_to_refresh.style.display = "block";
+        drag_to_refresh.style.height = (e.touches[0].pageY - initY) + "px";
+        console.log(drag_to_refresh.style.height);
+        if(parseInt(drag_to_refresh.style.height)>=100){
+            // 注意：因为height得到的值是px为单位，所以用parseInt解析
+            drag_to_refresh.style.height = "100px";
+            if(parseInt(drag_to_refresh.style.height)>80){
+                drag_to_refresh.style.lineHeight = drag_to_refresh.style.height;
+                drag_to_refresh.innerHTML  = "松开刷新";
+            }
+        }
+    }
+
+    function dragEnd (e){
+        if(parseInt(drag_to_refresh.style.height)>80){
+            refresh.style.display = "block";
+            setTimeout(reload,1000);
+        }
+        drag_to_refresh.style.display = "none"; 
+    }
+
+    function reload () {
+        location.reload();
+    }
+}
+</script>
+</body>
+</html>
